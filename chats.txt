@@ -1,0 +1,21 @@
+Chat Sample1
+[10:00 AM] Rohan: GUYS! You won't believe it! I cracked the Google interview!
+[10:05 AM] Vikram: Oh... that's great. Happy for you.
+[10:05 AM] Rohan: I am on cloud nine! My hands are literally shaking with excitement!
+[10:06 AM] Vikram: Yeah. I wish I had some good news.
+[10:07 AM] Rohan: We have to celebrate tonight! Drinks on me!
+[10:15 AM] Vikram: I don't think I can come. She broke up with me today, Rohan.
+[10:15 AM] Rohan: Oh no... really?
+[10:17 AM] Vikram: Yeah. I feel shattered. I just want to stay in bed and cry.
+[10:18 AM] Rohan: Oh man, my happiness just vanished. I'm so sorry.
+[10:25 AM] Vikram: It feels like my chest is empty. I am just so lonely.
+Chat Sample2
+[23:00] Riya: I am going to fail tomorrow. I know nothing.
+[23:01] Ankit: Chill, we studied the whole syllabus.
+[23:02] Riya: My hands are shaking. I can't remember any formulas.
+[23:05] Riya: I am terrified, Ankit. What if I get a zero?
+[23:06] Ankit: You are just overthinking. Take a deep breath.
+[23:08] Riya: No, seriously. I feel like throwing up. I am so scared.
+[23:09] Riya: This pressure is killing me. I'm having a panic attack.
+[23:10] Ankit: Hey, listen to me. You are smart. You will do fine.
+Chat Sample3

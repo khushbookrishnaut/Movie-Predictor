@@ -1,0 +1,19 @@
+[project]
+name = "shipathon-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "joblib>=1.5.3",
+    "numpy>=2.4.1",
+    "pandas>=2.3.3",
+    "pip>=25.3",
+    "pypdf>=6.6.0",
+    "regex>=2026.1.15",
+    "scikit-learn>=1.8.0",
+    "streamlit>=1.53.0",
+    "tokenizer>=3.6.2",
+    "tokenizers>=0.22.2",
+    "xgboost>=3.1.3",
+]

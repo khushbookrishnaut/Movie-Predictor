@@ -698,47 +698,132 @@ def get_recommendations(label, pref_type):
         return random.sample(options, 4)
     else:
         return options
-# ==========================================
-# PART 5: THE INTERFACE
-# ==========================================
-print("\n" + "="*40)
-print("💬 PASTE CHAT HISTORY (Type 'END' to finish)")
-print("="*40)
+# # ==========================================
+# # PART 5: THE INTERFACE
+# # ==========================================
+# print("\n" + "="*40)
+# print("💬 PASTE CHAT HISTORY (Type 'END' to finish)")
+# print("="*40)
 
-user_lines = []
-while True:
-    try:
-        line = input()
-        if line.strip().upper() == 'END': break
-        user_lines.append(line)
-    except EOFError:
-        break
+# user_lines = []
+# while True:
+#     try:
+#         line = input()
+#         if line.strip().upper() == 'END': break
+#         user_lines.append(line)
+#     except EOFError:
+#         break
 
-speakers = parse_chat_history("\n".join(user_lines))
+# speakers = parse_chat_history("\n".join(user_lines))
 
-if not speakers:
-    print("❌ No valid chat messages found.")
-    print("   Tip: Paste lines like 'Rahul: I am happy today' or '[10/10/24] Rahul: Hello'")
-else:
-    names = list(speakers.keys())
-    for i, name in enumerate(names): print(f"{i+1}. {name}")
+# if not speakers:
+#     print("❌ No valid chat messages found.")
+#     print("   Tip: Paste lines like 'Rahul: I am happy today' or '[10/10/24] Rahul: Hello'")
+# else:
+#     names = list(speakers.keys())
+#     for i, name in enumerate(names): print(f"{i+1}. {name}")
     
-    try:
-        idx = int(input(f"\nSelect person (1-{len(names)}): ")) - 1
-        if 0 <= idx < len(names):
-            selected = names[idx]
+#     try:
+#         idx = int(input(f"\nSelect person (1-{len(names)}): ")) - 1
+#         if 0 <= idx < len(names):
+#             selected = names[idx]
             
-            # Predict
-            bpe_input = bpe_tokenize(speakers[selected])
-            mood_idx = model.predict(vectorizer.transform([bpe_input]))[0]
-            mood = label_encoder.inverse_transform([mood_idx])[0]
+#             # Predict
+#             bpe_input = bpe_tokenize(speakers[selected])
+#             mood_idx = model.predict(vectorizer.transform([bpe_input]))[0]
+#             mood = label_encoder.inverse_transform([mood_idx])[0]
             
-            print(f"\n✨ {selected}'s Mood: {mood.upper()}")
-            pref = input("Choice: Movie (m) or Series (w)? ").lower()
+#             print(f"\n✨ {selected}'s Mood: {mood.upper()}")
+#             pref = input("Choice: Movie (m) or Series (w)? ").lower()
             
-            recs = get_recommendations(mood, pref)
-            print(f"🍿 Recommendations: {', '.join(recs)}")
-        else:
-            print("❌ Invalid selection.")
-    except ValueError:
-        print("❌ Please enter a number.")
+#             recs = get_recommendations(mood, pref)
+#             print(f"🍿 Recommendations: {', '.join(recs)}")
+#         else:
+#             print("❌ Invalid selection.")
+#     except ValueError:
+#         print("❌ Please enter a number.")
+def process_chat_file(filename):
+    """
+    Reads a WhatsApp export .txt file and extracts just the messages.
+    It removes timestamps like [12/07/2024, 4:05 PM] to focus on the mood words.
+    """
+    if not os.path.exists(filename):
+        print(f"❌ Error: File '{filename}' not found.")
+        return ""
+
+    with open(filename, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    # Regex to clean timestamps (Standard WhatsApp format)
+    # Matches "dd/mm/yyyy, hh:mm - " or "[dd/mm/yyyy, hh:mm] "
+    # This is optional; keeping timestamps doesn't hurt, but cleaning is nicer.
+    clean_text = re.sub(r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}.*?-\s', '', content) # Android style
+    clean_text = re.sub(r'\[\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\]', '', clean_text) # iOS style
+    
+    return clean_text
+
+# ==========================================
+# 3. MANUAL INPUT FUNCTION
+# ==========================================
+def get_manual_input():
+    print("\n📝 Paste your chat or type your feelings below.")
+    print("   (Type 'DONE' on a new line when you are finished)")
+    print("-" * 40)
+    
+    lines = []
+    while True:
+        line = input()
+        if line.strip().upper() == 'DONE':
+            break
+        lines.append(line)
+    
+    return " ".join(lines)
+
+# ==========================================
+# 4. MAIN APPLICATION LOOP
+# ==========================================
+print("\n" + "="*60)
+print("🎬  MOOD RECOMMENDER (Chat & File Import)  🎬")
+print("="*60)
+
+while True:
+    print("\nSelect Input Method:")
+    print("1. Manual Entry (Type/Paste)")
+    print("2. Import Text File (e.g., chat.txt)")
+    print("3. Exit")
+    
+    choice = input("👉 Enter choice (1-3): ").strip()
+
+    extracted_text = ""
+
+    if choice == '1':
+        extracted_text = get_manual_input()
+        if not extracted_text:
+            print("⚠️ No text entered. Try again.")
+            continue
+
+    elif choice == '2':
+        fname = input("📂 Enter filename (e.g., 'chat.txt'): ").strip()
+        extracted_text = process_chat_file(fname)
+        if not extracted_text:
+            continue
+        print(f"✅ Loaded {len(extracted_text)} characters from file.")
+
+    elif choice == '3' or choice.lower() == 'exit':
+        print("👋 Bye!")
+        break
+    
+    else:
+        print("❌ Invalid choice.")
+        continue
+
+    # --- PREDICTION & RESULT ---
+    # We pass the 'extracted_text' (which contains the whole chat) to the recommender.
+    # It checks for keywords like 'happy', 'sad', 'love' inside that text.
+    
+    pref = input("📺 Prefer Movie (m) or Web Series (w)? ").strip().lower()
+    recs = get_recommendations(extracted_text, pref)
+    
+    print(f"\n✨ Based on your chat, here are 4 picks:")
+    for r in recs:
+        print(f"  - {r}")
