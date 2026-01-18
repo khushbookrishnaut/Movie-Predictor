@@ -1,0 +1,13 @@
+# Virtual Environment (uv / venv)
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data files (Optional: keep these if you want to share them)
+# train.txt
